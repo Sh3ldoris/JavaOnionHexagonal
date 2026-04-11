@@ -21,6 +21,10 @@
         <java.version>25</java.version>
     </properties>
 
+    <modules>
+        <module>water-domain</module>
+    </modules>
+
     <build>
         <plugins>
             <!-- Enforce commit message pattern -->
