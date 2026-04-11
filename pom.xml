@@ -30,7 +30,7 @@
                 <version>3.6.0</version>
                 <configuration>
                     <installHooks>
-                        <commit-msg>.githooks/commit-msg</commit-msg>
+                        <commit-msg>.git-hooks/commit-msg</commit-msg>
                     </installHooks>
                 </configuration>
                 <executions>
