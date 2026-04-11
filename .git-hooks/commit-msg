@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Regex for a conventional commit.
+PATTERN="^(feat|fix|chore|docs|style|refactor|test|perf|ci|build|revert)(\(.+\))?(!)?: .{1,72}"
+# Get the commit message (the parameter we're given is just the path to the
+# temporary file which holds the message).
+COMMIT_MSG=$(cat "$1")
+
+# If message does not meet the conventional message pattern -> display error message and exit error
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+  echo ""
+  echo "ERROR: Invalid commit message format."
+  echo "Expected: <type>(<scope>): <description>"
+  echo "Example:  feat(order): add discount calculation"
+  echo ""
+  exit 1
+fi
