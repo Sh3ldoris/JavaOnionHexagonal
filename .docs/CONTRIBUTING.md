@@ -4,6 +4,8 @@ This project follows the [Conventional Commits](https://www.conventionalcommits.
 
 You can find cheatsheet for conventional commits here: https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13.
 
+Every commit is checked by git commit-msg hook.
+
 ---
 
 ## Format
