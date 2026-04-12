@@ -1,11 +1,10 @@
-package usecase;
+package com.waterconnect.application.usecase;
 
 import com.waterconnect.domain.port.outbound.CustomerRepository;
 import com.waterconnect.domain.port.outbound.DomainEventPublisher;
 
 /**
  * Use case: Register a new customer.
- *
  * TODO: Implement
  * 1. Create a command record (inner class or separate file):
  *    record RegisterCustomerCommand(String fullName, String customerType,
@@ -24,8 +23,10 @@ public class RegisterCustomerUseCase {
     private final CustomerRepository customerRepository;
     private final DomainEventPublisher eventPublisher;
 
-    public RegisterCustomerUseCase(CustomerRepository customerRepository,
-                                    DomainEventPublisher eventPublisher) {
+    public RegisterCustomerUseCase(
+            CustomerRepository customerRepository,
+            DomainEventPublisher eventPublisher
+    ) {
         this.customerRepository = customerRepository;
         this.eventPublisher = eventPublisher;
     }

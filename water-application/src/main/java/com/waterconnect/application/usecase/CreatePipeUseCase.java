@@ -1,4 +1,4 @@
-package usecase;
+package com.waterconnect.application.usecase;
 
 import com.waterconnect.domain.port.outbound.PipeRepository;
 
