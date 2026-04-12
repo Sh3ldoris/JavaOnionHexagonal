@@ -70,7 +70,7 @@ public class Customer {
         // Set other attributes
         final var id = UUID.randomUUID();
         final var now = Instant.now();
-        customer.customerId = UUID.randomUUID();
+        customer.customerId = id;
         customer.registeredAt = now;
 
         // Register domain event
