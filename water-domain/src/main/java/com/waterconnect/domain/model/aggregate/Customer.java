@@ -6,7 +6,9 @@ import com.waterconnect.domain.model.valueobject.ContactInfo;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -52,13 +54,21 @@ public class Customer {
     }
 
     public List<CustomerRegisteredEvent> getCustomerRegisteredEvents() {
-        return customerRegisteredEvents;
+        return Collections.unmodifiableList(this.customerRegisteredEvents);
     }
 
     /**
      * Customer factory
      */
     public static Customer register(String fullName, CustomerType customerType, ContactInfo contactInfo) {
+        // Validation of inputs
+        Objects.requireNonNull(fullName, "fullName must not be null");
+        Objects.requireNonNull(customerType, "customerType must not be null");
+
+        if (fullName.isBlank()) {
+            throw new IllegalArgumentException("fullName must not be blank");
+        }
+
         // Create a new domain object
         var customer = new Customer();
 
