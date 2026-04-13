@@ -1,4 +1,4 @@
-package com.waterconnect.domain.outbound;
+package com.waterconnect.domain.port.outbound;
 
 import java.util.Optional;
 import java.util.UUID;
