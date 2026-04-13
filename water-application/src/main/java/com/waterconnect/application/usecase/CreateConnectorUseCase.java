@@ -1,14 +1,17 @@
 package com.waterconnect.application.usecase;
 
+import java.util.UUID;
+
+import com.waterconnect.application.command.CreateConnectorCommand;
+import com.waterconnect.application.dto.mapper.GeoPointDtoMapper;
+import com.waterconnect.domain.model.aggregate.Connector;
+import com.waterconnect.domain.model.enums.ConnectorType;
+import com.waterconnect.domain.model.enums.PipeMaterial;
+import com.waterconnect.domain.model.valueobject.GeoPoint;
 import com.waterconnect.domain.port.outbound.ConnectorRepository;
 
 /**
  * Use case: Create a connector between pipes.
- *
- * TODO: Implement
- * - Validate connector type constraints
- * - Create Connector aggregate via factory method
- * - Persist via ConnectorRepository port
  */
 public class CreateConnectorUseCase {
 
@@ -18,5 +21,16 @@ public class CreateConnectorUseCase {
         this.connectorRepository = connectorRepository;
     }
 
-    // TODO: Add command record and execute() method
+    public UUID create(CreateConnectorCommand command) {
+        GeoPoint location = GeoPointDtoMapper.mapToGeoPoint(command.location());
+
+        // Create a new Connector
+        var connector = Connector.create(ConnectorType.fromString(command.connectorType()), command.diameterMm(),
+                PipeMaterial.fromString(command.pipeMaterial()), location);
+
+        // Save the new Connector
+        this.connectorRepository.save(connector);
+
+        return connector.getConnectorId();
+    }
 }

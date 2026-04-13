@@ -3,10 +3,9 @@ package com.waterconnect.application.usecase;
 import java.util.UUID;
 
 import com.waterconnect.application.command.CreatePipeCommand;
-import com.waterconnect.application.dto.GeoSegmentDto;
+import com.waterconnect.application.dto.mapper.GeoSegmentDtoMapper;
 import com.waterconnect.domain.model.aggregate.Pipe;
 import com.waterconnect.domain.model.enums.PipeMaterial;
-import com.waterconnect.domain.model.valueobject.GeoPoint;
 import com.waterconnect.domain.model.valueobject.GeoSegment;
 import com.waterconnect.domain.port.outbound.PipeRepository;
 
@@ -22,7 +21,7 @@ public class CreatePipeUseCase {
     }
 
     public UUID execute(CreatePipeCommand command) {
-        GeoSegment geoSegment = mapFromDto(command.location());
+        GeoSegment geoSegment = GeoSegmentDtoMapper.mapToGeoPoint(command.location());
         // Create a new Pipe
         var pipe = Pipe.planNew(command.diameterMm(), command.lengthMeters(),
                 command.pressureRatingBar(), PipeMaterial.fromString(command.pipeMaterial()), geoSegment);
@@ -31,14 +30,6 @@ public class CreatePipeUseCase {
         this.pipeRepository.save(pipe);
 
         return pipe.getPipeId();
-    }
-
-
-    private static GeoSegment mapFromDto(GeoSegmentDto geoSegmentDto) {
-        var geoPointStart = new GeoPoint(geoSegmentDto.start().latitude(), geoSegmentDto.start().longitude());
-        var geoPointEnd = new GeoPoint(geoSegmentDto.end().latitude(), geoSegmentDto.end().longitude());
-
-        return new GeoSegment(geoPointStart, geoPointEnd);
     }
 
 }
