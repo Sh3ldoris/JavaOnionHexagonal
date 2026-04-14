@@ -84,4 +84,64 @@ public class PipeJpaEntity {
     public UUID getPipeId() {
         return pipeId;
     }
+
+    public void setPipeId(UUID pipeId) {
+        this.pipeId = pipeId;
+    }
+
+    public PipeMaterial getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(PipeMaterial material) {
+        this.material = material;
+    }
+
+    public int getDiameterMm() {
+        return diameterMm;
+    }
+
+    public void setDiameterMm(int diameterMm) {
+        this.diameterMm = diameterMm;
+    }
+
+    public double getLengthMeters() {
+        return lengthMeters;
+    }
+
+    public void setLengthMeters(double lengthMeters) {
+        this.lengthMeters = lengthMeters;
+    }
+
+    public double getPressureRatingBar() {
+        return pressureRatingBar;
+    }
+
+    public void setPressureRatingBar(double pressureRatingBar) {
+        this.pressureRatingBar = pressureRatingBar;
+    }
+
+    public PipeStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PipeStatus status) {
+        this.status = status;
+    }
+
+    public Instant getInstalledAt() {
+        return installedAt;
+    }
+
+    public void setInstalledAt(Instant installedAt) {
+        this.installedAt = installedAt;
+    }
+
+    public PipeLocationJpaEntity getLocation() {
+        return location;
+    }
+
+    public void setLocation(PipeLocationJpaEntity location) {
+        this.location = location;
+    }
 }

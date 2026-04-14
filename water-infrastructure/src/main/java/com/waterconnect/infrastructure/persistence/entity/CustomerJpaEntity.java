@@ -27,7 +27,7 @@ public class CustomerJpaEntity {
     private String fullName;
 
     @Enumerated(EnumType.STRING)
-    private String customerType;
+    private CustomerType customerType;
 
     private String email;
     private String phone;
@@ -49,7 +49,7 @@ public class CustomerJpaEntity {
 
         entity.customerId = customer.getCustomerId();
         entity.fullName = customer.getFullName();
-        entity.customerType = customer.getCustomerType().toString();
+        entity.customerType = customer.getCustomerType();
 
         ContactInfo contactInfo = customer.getContactInfo();
         entity.email = contactInfo.email();
@@ -70,7 +70,7 @@ public class CustomerJpaEntity {
      * Factory of Customer domain object
      */
     public Customer toDomain() {
-        var type = CustomerType.fromString(customerType);
+        var type = customerType;
         var address = new Address(street, city, postalCode, country);
         var contactInfo = new ContactInfo(email, phone, address);
 
@@ -99,11 +99,11 @@ public class CustomerJpaEntity {
         this.fullName = fullName;
     }
 
-    public String getCustomerType() {
+    public CustomerType getCustomerType() {
         return customerType;
     }
 
-    public void setCustomerType(String customerType) {
+    public void setCustomerType(CustomerType customerType) {
         this.customerType = customerType;
     }
 
