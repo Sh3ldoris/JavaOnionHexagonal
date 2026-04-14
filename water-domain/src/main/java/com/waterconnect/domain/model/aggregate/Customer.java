@@ -88,4 +88,24 @@ public class Customer {
 
         return customer;
     }
+
+    protected void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
+    }
+
+    protected void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    protected void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
+    }
+
+    protected void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+
+    protected void setRegisteredAt(Instant registeredAt) {
+        this.registeredAt = registeredAt;
+    }
 }
