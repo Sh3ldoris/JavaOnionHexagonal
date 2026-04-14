@@ -24,6 +24,7 @@
     <modules>
         <module>water-application</module>
         <module>water-domain</module>
+        <module>water-infrastructure</module>
     </modules>
 
     <build>

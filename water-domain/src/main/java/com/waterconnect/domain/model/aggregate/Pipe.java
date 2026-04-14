@@ -112,4 +112,36 @@ public class Pipe {
 
         return pipe;
     }
+
+    protected void setPipeId(UUID pipeId) {
+        this.pipeId = pipeId;
+    }
+
+    protected void setMaterial(PipeMaterial material) {
+        this.material = material;
+    }
+
+    protected void setDiameterMm(int diameterMm) {
+        this.diameterMm = diameterMm;
+    }
+
+    protected void setLengthMeters(double lengthMeters) {
+        this.lengthMeters = lengthMeters;
+    }
+
+    protected void setPressureRatingBar(double pressureRatingBar) {
+        this.pressureRatingBar = pressureRatingBar;
+    }
+
+    protected void setStatus(PipeStatus status) {
+        this.status = status;
+    }
+
+    protected void setInstalledAt(Instant installedAt) {
+        this.installedAt = installedAt;
+    }
+
+    protected void setLocation(GeoSegment location) {
+        this.location = location;
+    }
 }
