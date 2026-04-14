@@ -2,6 +2,9 @@ package com.waterconnect.application.usecase;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.waterconnect.application.command.CreateConnectorCommand;
 import com.waterconnect.application.dto.mapper.GeoPointDtoMapper;
 import com.waterconnect.domain.model.aggregate.Connector;
@@ -13,6 +16,7 @@ import com.waterconnect.domain.port.outbound.ConnectorRepository;
 /**
  * Use case: Create a connector between pipes.
  */
+@Service
 public class CreateConnectorUseCase {
 
     private final ConnectorRepository connectorRepository;
@@ -21,6 +25,7 @@ public class CreateConnectorUseCase {
         this.connectorRepository = connectorRepository;
     }
 
+    @Transactional
     public UUID create(CreateConnectorCommand command) {
         GeoPoint location = GeoPointDtoMapper.mapToGeoPoint(command.location());
 
