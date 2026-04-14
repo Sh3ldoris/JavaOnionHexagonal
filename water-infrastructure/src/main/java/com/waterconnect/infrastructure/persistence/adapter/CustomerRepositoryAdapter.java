@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.waterconnect.domain.model.aggregate.Customer;
 import com.waterconnect.domain.port.outbound.CustomerRepository;
+import com.waterconnect.infrastructure.persistence.entity.CustomerJpaEntity;
 import com.waterconnect.infrastructure.persistence.repository.CustomerJpaRepository;
 
 /**
  * Adapter: implements domain port using Spring Data JPA.
- *
- * TODO: Implement the mapping between domain and JPA entities.
  */
 @Repository
 public class CustomerRepositoryAdapter implements CustomerRepository {
@@ -26,21 +26,24 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
 
     @Override
     public Customer save(Customer customer) {
-        // TODO: CustomerJpaEntity entity = CustomerJpaEntity.fromDomain(customer);
-        //       return jpaRepository.save(entity).toDomain();
-        throw new UnsupportedOperationException("TODO: Implement save");
+        // Create entity object from domain
+        var entity = CustomerJpaEntity.fromDomain(customer);
+        // Save the entity to the repository
+        return this.jpaRepository.save(entity).toDomain();
     }
 
     @Override
     public Optional<Customer> findById(UUID id) {
-        // TODO: return jpaRepository.findById(id).map(CustomerJpaEntity::toDomain);
-        throw new UnsupportedOperationException("TODO: Implement findById");
+        return this.jpaRepository.findById(id)
+                .map(CustomerJpaEntity::toDomain);
     }
 
     @Override
     public List<Customer> findAll(int page, int size) {
-        // TODO: Use Pageable
-        throw new UnsupportedOperationException("TODO: Implement findAll");
+        return this.jpaRepository.findAll(PageRequest.of(page, size))
+                .stream()
+                .map(CustomerJpaEntity::toDomain)
+                .toList();
     }
 
     @Override
