@@ -102,4 +102,33 @@ public class Connector {
 
         return connector;
     }
+
+    protected void setConnectorId(UUID connectorId) {
+        this.connectorId = connectorId;
+    }
+
+    protected void setConnectorType(ConnectorType connectorType) {
+        this.connectorType = connectorType;
+    }
+
+    protected void setMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
+    }
+
+    protected void setDiameterMm(int diameterMm) {
+        this.diameterMm = diameterMm;
+    }
+
+    protected void setMaterial(PipeMaterial material) {
+        this.material = material;
+    }
+
+    protected void setLocation(GeoPoint location) {
+        this.location = location;
+    }
+
+    protected void setConnectedPipeIds(List<UUID> connectedPipeIds) {
+        this.connectedPipeIds.clear();
+        this.connectedPipeIds.addAll(connectedPipeIds);
+    }
 }
