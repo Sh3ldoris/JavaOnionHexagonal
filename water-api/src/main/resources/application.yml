@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: water-connect-system
+  profiles:
+    active: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:waterconnect;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/waterconnect
+    driver-class-name: org.postgresql.Driver
+    username: waterconnect
+    password: changeme
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
