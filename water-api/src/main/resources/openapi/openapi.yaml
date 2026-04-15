@@ -1,0 +1,377 @@
+openapi: 3.1.0
+info:
+  title: Water Connect Management API
+  version: 1.0.0
+  description: API for managing water connections, pipes, connectors, and work orders
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+paths:
+  /api/v1/customers:
+    post:
+      operationId: registerCustomer
+      summary: Register a new customer
+      tags: [Customers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterCustomerRequest'
+      responses:
+        '201':
+          description: Customer registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          description: Validation error
+    get:
+      operationId: listCustomers
+      summary: List customers (paginated)
+      tags: [Customers]
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 0 }
+        - name: size
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: Paginated list of customers
+
+  /api/v1/customers/{customerId}:
+    get:
+      operationId: getCustomer
+      summary: Get customer by ID
+      tags: [Customers]
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Customer found
+        '404':
+          description: Customer not found
+
+  /api/v1/pipes:
+    post:
+      operationId: createPipe
+      summary: Create a new pipe
+      tags: [Pipes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePipeRequest'
+      responses:
+        '201':
+          description: Pipe created
+    get:
+      operationId: listPipes
+      summary: List/filter pipes
+      tags: [Pipes]
+      parameters:
+        - name: material
+          in: query
+          schema: { type: string, enum: [PVC, COPPER, STEEL, HDPE] }
+        - name: status
+          in: query
+          schema: { type: string, enum: [PLANNED, INSTALLED, ACTIVE, DECOMMISSIONED] }
+      responses:
+        '200':
+          description: List of pipes
+
+  /api/v1/pipes/{pipeId}:
+    get:
+      operationId: getPipe
+      tags: [Pipes]
+      parameters:
+        - name: pipeId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Pipe found
+
+  /api/v1/connectors:
+    post:
+      operationId: createConnector
+      tags: [Connectors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConnectorRequest'
+      responses:
+        '201':
+          description: Connector created
+
+  /api/v1/connectors/{connectorId}:
+    get:
+      operationId: getConnector
+      tags: [Connectors]
+      parameters:
+        - name: connectorId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Connector found
+
+  /api/v1/service-points:
+    post:
+      operationId: requestServiceConnection
+      tags: [Service Points]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestServiceConnectionRequest'
+      responses:
+        '201':
+          description: Service connection requested
+
+  /api/v1/service-points/{servicePointId}:
+    get:
+      operationId: getServicePoint
+      tags: [Service Points]
+      parameters:
+        - name: servicePointId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Service point found
+
+  /api/v1/service-points/{servicePointId}/approve:
+    put:
+      operationId: approveServiceConnection
+      tags: [Service Points]
+      parameters:
+        - name: servicePointId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Approved
+
+  /api/v1/service-points/{servicePointId}/activate:
+    put:
+      operationId: activateServiceConnection
+      tags: [Service Points]
+      parameters:
+        - name: servicePointId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Activated
+
+  /api/v1/service-points/{servicePointId}/meter-readings:
+    post:
+      operationId: recordMeterReading
+      tags: [Service Points]
+      parameters:
+        - name: servicePointId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordMeterReadingRequest'
+      responses:
+        '200':
+          description: Recorded
+
+  /api/v1/work-orders:
+    post:
+      operationId: createWorkOrder
+      tags: [Work Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkOrderRequest'
+      responses:
+        '201':
+          description: Created
+    get:
+      operationId: listWorkOrders
+      tags: [Work Orders]
+      responses:
+        '200':
+          description: List
+
+  /api/v1/work-orders/{workOrderId}:
+    get:
+      operationId: getWorkOrder
+      tags: [Work Orders]
+      parameters:
+        - name: workOrderId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Found
+
+  /api/v1/work-orders/{workOrderId}/schedule:
+    put:
+      operationId: scheduleWorkOrder
+      tags: [Work Orders]
+      parameters:
+        - name: workOrderId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleWorkOrderRequest'
+      responses:
+        '200':
+          description: Scheduled
+
+  /api/v1/work-orders/{workOrderId}/start:
+    put:
+      operationId: startWorkOrder
+      tags: [Work Orders]
+      parameters:
+        - name: workOrderId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Started
+
+  /api/v1/work-orders/{workOrderId}/complete:
+    put:
+      operationId: completeWorkOrder
+      tags: [Work Orders]
+      parameters:
+        - name: workOrderId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Completed
+
+  /api/v1/work-orders/{workOrderId}/cancel:
+    put:
+      operationId: cancelWorkOrder
+      tags: [Work Orders]
+      parameters:
+        - name: workOrderId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Cancelled
+
+components:
+  schemas:
+    RegisterCustomerRequest:
+      type: object
+      required: [fullName, customerType, email, phone, street, city, postalCode, country]
+      properties:
+        fullName: { type: string }
+        customerType: { type: string, enum: [RESIDENTIAL, COMMERCIAL, INDUSTRIAL] }
+        email: { type: string, format: email }
+        phone: { type: string }
+        street: { type: string }
+        city: { type: string }
+        postalCode: { type: string }
+        country: { type: string }
+
+    CustomerResponse:
+      type: object
+      properties:
+        customerId: { type: string, format: uuid }
+        fullName: { type: string }
+        customerType: { type: string, enum: [RESIDENTIAL, COMMERCIAL, INDUSTRIAL] }
+        email: { type: string }
+        phone: { type: string }
+        address: { $ref: '#/components/schemas/AddressDto' }
+        registeredAt: { type: string, format: date-time }
+
+    AddressDto:
+      type: object
+      properties:
+        street: { type: string }
+        city: { type: string }
+        postalCode: { type: string }
+        country: { type: string }
+
+    CreatePipeRequest:
+      type: object
+      required: [material, diameterMm, lengthMeters, pressureRatingBar]
+      properties:
+        material: { type: string, enum: [PVC, COPPER, STEEL, HDPE] }
+        diameterMm: { type: integer, minimum: 15, maximum: 1200 }
+        lengthMeters: { type: number }
+        pressureRatingBar: { type: number, exclusiveMinimum: 0 }
+        startLatitude: { type: number }
+        startLongitude: { type: number }
+        endLatitude: { type: number }
+        endLongitude: { type: number }
+
+    CreateConnectorRequest:
+      type: object
+      required: [connectorType, diameterMm, material, latitude, longitude]
+      properties:
+        connectorType: { type: string, enum: [TEE, ELBOW, COUPLING, VALVE, REDUCER] }
+        diameterMm: { type: integer }
+        material: { type: string, enum: [PVC, COPPER, STEEL, HDPE] }
+        latitude: { type: number }
+        longitude: { type: number }
+
+    RequestServiceConnectionRequest:
+      type: object
+      required: [customerId, connectorId]
+      properties:
+        customerId: { type: string, format: uuid }
+        connectorId: { type: string, format: uuid }
+
+    RecordMeterReadingRequest:
+      type: object
+      required: [readingM3]
+      properties:
+        readingM3: { type: number, minimum: 0 }
+
+    CreateWorkOrderRequest:
+      type: object
+      required: [type, servicePointId]
+      properties:
+        type: { type: string, enum: [NEW_CONNECTION, REPAIR, METER_REPLACEMENT, DISCONNECTION] }
+        servicePointId: { type: string, format: uuid }
+        assignedTeam: { type: string }
+
+    ScheduleWorkOrderRequest:
+      type: object
+      required: [scheduledDate]
+      properties:
+        scheduledDate: { type: string, format: date }
+        assignedTeam: { type: string }
