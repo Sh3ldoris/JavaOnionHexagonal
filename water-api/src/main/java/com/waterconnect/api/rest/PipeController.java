@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.waterconnect.application.usecase.CreatePipeUseCase;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * TODO: Implement pipe endpoints from openapi.yaml
  */
+@Tag(name = "Pipes", description = "Pipe management (endpoints pending).")
 @RestController
 @RequestMapping("/api/v1/pipes")
 public class PipeController {
