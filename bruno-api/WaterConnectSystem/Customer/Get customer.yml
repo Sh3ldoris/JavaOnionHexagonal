@@ -1,0 +1,15 @@
+info:
+  name: Get customer
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8080/api/v1/customers/519c21be-f3c8-4ae1-95e2-d804a04a92f7
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
