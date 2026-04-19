@@ -26,7 +26,7 @@ public class CreateConnectorUseCase {
     }
 
     @Transactional
-    public UUID create(CreateConnectorCommand command) {
+    public UUID execute(CreateConnectorCommand command) {
         GeoPoint location = GeoPointDtoMapper.toDomain(command.location());
 
         // Create a new Connector
