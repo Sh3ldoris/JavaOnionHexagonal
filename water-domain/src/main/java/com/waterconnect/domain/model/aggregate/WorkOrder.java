@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.waterconnect.domain.model.enums.WorkOrderStatus;
@@ -42,5 +43,89 @@ public class WorkOrder {
         return Collections.unmodifiableList(notes);
     }
 
-    // TODO: Implement in Level 2-3
+    public static WorkOrder create(WorkOrderType type, UUID servicePointId) {
+        Objects.requireNonNull(type, "WorkOrderType must not be null");
+        Objects.requireNonNull(servicePointId, "ServicePointId must not be null");
+
+        // Create a new domain object
+        var  workOrder = new WorkOrder();
+        // Set attributes from parameters
+        workOrder.type = type;
+        workOrder.servicePointId = servicePointId;
+        // Set default attributes
+        var workOrderId = UUID.randomUUID();
+        workOrder.workOrderId = workOrderId;
+        workOrder.status = WorkOrderStatus.CREATED;
+        workOrder.createdAt = Instant.now();
+
+        return workOrder;
+    }
+
+    public UUID getWorkOrderId() {
+        return workOrderId;
+    }
+
+    public WorkOrderType getType() {
+        return type;
+    }
+
+    public UUID getServicePointId() {
+        return servicePointId;
+    }
+
+    public String getAssignedTeam() {
+        return assignedTeam;
+    }
+
+    public LocalDate getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public WorkOrderStatus getStatus() {
+        return status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getCompletedAt() {
+        return completedAt;
+    }
+
+    protected void setWorkOrderId(UUID workOrderId) {
+        this.workOrderId = workOrderId;
+    }
+
+    protected void setType(WorkOrderType type) {
+        this.type = type;
+    }
+
+    protected void setServicePointId(UUID servicePointId) {
+        this.servicePointId = servicePointId;
+    }
+
+    protected void setAssignedTeam(String assignedTeam) {
+        this.assignedTeam = assignedTeam;
+    }
+
+    protected void setScheduledDate(LocalDate scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    protected void setStatus(WorkOrderStatus status) {
+        this.status = status;
+    }
+
+    protected void setNotes(List<WorkNote> notes) {
+        this.notes = notes;
+    }
+
+    protected void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    protected void setCompletedAt(Instant completedAt) {
+        this.completedAt = completedAt;
+    }
 }
