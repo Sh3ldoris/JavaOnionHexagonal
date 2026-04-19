@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.waterconnect.api.dto.CreateConnectorRequestDto;
 import com.waterconnect.application.command.CreateConnectorCommand;
+import com.waterconnect.application.dto.ConnectorResultDto;
 import com.waterconnect.application.dto.GeoPointDto;
+import com.waterconnect.application.query.ConnectorQuery;
 import com.waterconnect.application.usecase.CreateConnectorUseCase;
-
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,9 +37,11 @@ import jakarta.validation.Valid;
 public class ConnectorController {
 
     private final CreateConnectorUseCase createConnectorUseCase;
+    private final ConnectorQuery connectorQuery;
 
-    public ConnectorController(CreateConnectorUseCase createConnectorUseCase) {
+    public ConnectorController(CreateConnectorUseCase createConnectorUseCase, ConnectorQuery connectorQuery) {
         this.createConnectorUseCase = createConnectorUseCase;
+        this.connectorQuery = connectorQuery;
     }
 
     @Operation(summary = "Create a new connector")
@@ -70,5 +76,21 @@ public class ConnectorController {
                 .body(connectorId);
     }
 
-    // TODO: Connector lookup
+    @Operation(summary = "Get connector by ID")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Connector found",
+                    content = @Content(schema = @Schema(implementation = ConnectorResultDto.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Connector not found",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
+    @GetMapping("/{connectorId}")
+    public ConnectorResultDto getConnector(
+            @Parameter(description = "Connector id", required = true) @PathVariable UUID connectorId
+    ) {
+        return this.connectorQuery.getById(connectorId);
+    }
 }

@@ -1,0 +1,15 @@
+info:
+  name: Get connector
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8080/api/v1/connectors/a976a0d7-83d8-43ad-ba8c-38a178d80dbf
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
