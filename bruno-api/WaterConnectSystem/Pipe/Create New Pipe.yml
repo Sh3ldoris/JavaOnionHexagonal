@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "material": "PVC",
+        "material": "COPPER",
         "diameterMm": 150,
         "lengthMeters": 500,
         "pressureRatingBar": 10,
