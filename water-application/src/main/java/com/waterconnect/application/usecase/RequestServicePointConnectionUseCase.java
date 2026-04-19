@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.waterconnect.domain.event.DomainEvent;
+import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.exception.EntityNotFoundException;
 import com.waterconnect.domain.model.aggregate.ServicePoint;
+import com.waterconnect.domain.model.enums.ConnectorType;
 import com.waterconnect.domain.port.outbound.ConnectorRepository;
 import com.waterconnect.domain.port.outbound.CustomerRepository;
 import com.waterconnect.domain.port.outbound.DomainEventPublisher;
@@ -34,7 +36,7 @@ public class RequestServicePointConnectionUseCase {
     }
 
     @Transactional
-    public UUID execute(UUID customerId, UUID connectorId) throws EntityNotFoundException {
+    public UUID execute(UUID customerId, UUID connectorId) throws EntityNotFoundException, BusinessRuleViolationException {
         // Verify customer and connector exist
         var customer = customerRepository.findById(customerId);
         var connector = connectorRepository.findById(connectorId);
@@ -44,6 +46,10 @@ public class RequestServicePointConnectionUseCase {
                     customer.isEmpty() ? "Customer" : "Connector",
                     customer.isEmpty() ? customerId : connectorId
             );
+        }
+
+        if (connector.get().getConnectorType() == ConnectorType.VALVE) {
+            throw new BusinessRuleViolationException("Cannot create Service Point Connection for Connector of type: VALVE");
         }
 
         // Request a new Service Point
