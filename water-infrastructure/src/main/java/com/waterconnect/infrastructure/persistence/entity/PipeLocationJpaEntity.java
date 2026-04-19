@@ -1,5 +1,7 @@
 package com.waterconnect.infrastructure.persistence.entity;
 
+import java.util.UUID;
+
 import com.waterconnect.domain.model.valueobject.GeoPoint;
 import com.waterconnect.domain.model.valueobject.GeoSegment;
 import jakarta.persistence.Column;
@@ -57,5 +59,29 @@ public class PipeLocationJpaEntity {
 
     public void setPipe(PipeJpaEntity pipe) {
         this.pipe = pipe;
+    }
+
+    public UUID getPipeId() {
+        return pipeId;
+    }
+
+    public PipeJpaEntity getPipe() {
+        return pipe;
+    }
+
+    public double getStartLatitude() {
+        return startLatitude;
+    }
+
+    public double getStartLongitude() {
+        return startLongitude;
+    }
+
+    public double getEndLatitude() {
+        return endLatitude;
+    }
+
+    public double getEndLongitude() {
+        return endLongitude;
     }
 }
