@@ -8,11 +8,11 @@ import jakarta.validation.constraints.NotNull;
 public record CreatePipeRequestDto(
         @NotNull PipeMaterial material,
         @NotNull @Min(15) @Max(1200) Integer diameterMm,
-        @NotNull Integer lengthMeters,
-        @NotNull Integer pressureRatingBar,
-        @NotNull Integer startLatitude,
-        @NotNull Integer startLongitude,
-        @NotNull Integer endLatitude,
-        @NotNull Integer endLongitude
+        @NotNull Double lengthMeters,
+        @NotNull Double pressureRatingBar,
+        @NotNull Double startLatitude,
+        @NotNull Double startLongitude,
+        @NotNull Double endLatitude,
+        @NotNull Double endLongitude
 ) {
 }
