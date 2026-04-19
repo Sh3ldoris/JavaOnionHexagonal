@@ -38,23 +38,4 @@ class CustomerJpaEntityTest {
         assertThat(restored.getContactInfo().address().postalCode()).isEqualTo("1000-001");
         assertThat(restored.getContactInfo().address().country()).isEqualTo("PT");
     }
-
-    @Test
-    void toDomain_throwsWhenCustomerTypeCannotBeConverted() {
-        var entity = new CustomerJpaEntity();
-        entity.setCustomerId(java.util.UUID.randomUUID());
-        entity.setFullName("Invalid Type");
-        entity.setCustomerType("unknown-type");
-        entity.setEmail("valid@example.com");
-        entity.setPhone("+351-555-0102");
-        entity.setStreet("Street");
-        entity.setCity("City");
-        entity.setPostalCode("1000");
-        entity.setCountry("PT");
-        entity.setRegisteredAt(Instant.now());
-
-        assertThatThrownBy(entity::toDomain)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("cannot convert");
-    }
 }

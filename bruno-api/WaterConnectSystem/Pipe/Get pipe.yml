@@ -1,0 +1,15 @@
+info:
+  name: Get pipe
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8080/api/v1/pipes/46e1a121-05c1-4cf3-bb60-cac98057c124
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

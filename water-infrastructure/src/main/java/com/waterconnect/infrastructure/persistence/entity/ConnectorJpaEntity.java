@@ -28,14 +28,14 @@ public class ConnectorJpaEntity {
     private UUID connectorId;
 
     @Enumerated(EnumType.STRING)
-    private String connectorType;
+    private ConnectorType connectorType;
 
     private int maxConnections;
 
     private int diameterMm;
 
     @Enumerated(EnumType.STRING)
-    private String material;
+    private PipeMaterial material;
 
     private double latitude;
 
@@ -52,10 +52,10 @@ public class ConnectorJpaEntity {
     public static ConnectorJpaEntity fromDomain(Connector connector) {
         var entity = new ConnectorJpaEntity();
         entity.connectorId = connector.getConnectorId();
-        entity.connectorType = connector.getConnectorType().toString();
+        entity.connectorType = connector.getConnectorType();
         entity.maxConnections = connector.getMaxConnections();
         entity.diameterMm = connector.getDiameterMm();
-        entity.material = connector.getMaterial().toString();
+        entity.material = connector.getMaterial();
         entity.latitude = connector.getLocation().latitude();
         entity.longitude = connector.getLocation().longitude();
         entity.connectedPipeIds = new ArrayList<>(connector.getConnectedPipeIds());
@@ -65,10 +65,10 @@ public class ConnectorJpaEntity {
     public Connector toDomain() {
         return ConnectorFactory.createConnector(
                 connectorId,
-                ConnectorType.fromString(connectorType),
+                connectorType,
                 maxConnections,
                 diameterMm,
-                PipeMaterial.fromString(material),
+                material,
                 new GeoPoint(latitude, longitude),
                 new ArrayList<>(connectedPipeIds)
         );
@@ -76,5 +76,65 @@ public class ConnectorJpaEntity {
 
     public UUID getConnectorId() {
         return connectorId;
+    }
+
+    public void setConnectorId(UUID connectorId) {
+        this.connectorId = connectorId;
+    }
+
+    public ConnectorType getConnectorType() {
+        return connectorType;
+    }
+
+    public void setConnectorType(ConnectorType connectorType) {
+        this.connectorType = connectorType;
+    }
+
+    public int getMaxConnections() {
+        return maxConnections;
+    }
+
+    public void setMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
+    }
+
+    public int getDiameterMm() {
+        return diameterMm;
+    }
+
+    public void setDiameterMm(int diameterMm) {
+        this.diameterMm = diameterMm;
+    }
+
+    public PipeMaterial getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(PipeMaterial material) {
+        this.material = material;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public List<UUID> getConnectedPipeIds() {
+        return connectedPipeIds;
+    }
+
+    public void setConnectedPipeIds(List<UUID> connectedPipeIds) {
+        this.connectedPipeIds = connectedPipeIds;
     }
 }

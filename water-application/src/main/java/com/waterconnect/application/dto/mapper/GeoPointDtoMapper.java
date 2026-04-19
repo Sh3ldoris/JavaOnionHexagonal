@@ -8,7 +8,11 @@ public class GeoPointDtoMapper {
     // No instances of mapper class
     private GeoPointDtoMapper() {}
 
-    public static GeoPoint mapToGeoPoint(GeoPointDto geoPointDto) {
+    public static GeoPoint toDomain(GeoPointDto geoPointDto) {
         return new GeoPoint(geoPointDto.latitude(), geoPointDto.longitude());
+    }
+
+    public static GeoPointDto fromDomain(GeoPoint geoPoint) {
+        return new GeoPointDto(geoPoint.latitude(), geoPoint.longitude());
     }
 }

@@ -26,7 +26,7 @@ public class CreatePipeUseCase {
 
     @Transactional
     public UUID execute(CreatePipeCommand command) {
-        GeoSegment geoSegment = GeoSegmentDtoMapper.mapToGeoPoint(command.location());
+        GeoSegment geoSegment = GeoSegmentDtoMapper.toDomain(command.location());
         // Create a new Pipe
         var pipe = Pipe.planNew(command.diameterMm(), command.lengthMeters(),
                 command.pressureRatingBar(), PipeMaterial.fromString(command.pipeMaterial()), geoSegment);

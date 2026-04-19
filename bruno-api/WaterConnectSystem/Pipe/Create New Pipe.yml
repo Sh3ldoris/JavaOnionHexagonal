@@ -1,0 +1,28 @@
+info:
+  name: Create New Pipe
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8080/api/v1/pipes
+  body:
+    type: json
+    data: |-
+      {
+        "material": "COPPER",
+        "diameterMm": 150,
+        "lengthMeters": 500,
+        "pressureRatingBar": 10,
+        "startLatitude": 48,
+        "startLongitude": 19,
+        "endLatitude": 49,
+        "endLongitude": 20
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

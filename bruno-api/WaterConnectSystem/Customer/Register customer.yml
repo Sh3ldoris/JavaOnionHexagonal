@@ -1,0 +1,28 @@
+info:
+  name: Register customer
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8080/api/v1/customers
+  body:
+    type: json
+    data: |-
+      {
+        "fullName": "Jane Doe",
+        "customerType": "RESIDENTIAL",
+        "email": "jane.doe@example.com",
+        "phone": "+351912345678",
+        "street": "Rua das Flores 123",
+        "city": "Lisbon",
+        "postalCode": "1000-001",
+        "country": "Portugal"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

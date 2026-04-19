@@ -12,4 +12,5 @@ import com.waterconnect.domain.model.aggregate.Pipe;
 public interface PipeRepository {
     Pipe save(Pipe pipe);
     Optional<Pipe> findById(UUID id);
+    java.util.List<Pipe> findAll(String material, String status);
 }
