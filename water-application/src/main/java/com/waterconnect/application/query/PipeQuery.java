@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.waterconnect.application.dto.PipeResultDto;
 import com.waterconnect.application.dto.enums.PipeMaterial;
@@ -21,6 +22,12 @@ public class PipeQuery {
         this.pipeRepository = pipeRepository;
     }
 
+    /**
+     * Get pipe by provided Pipe ID
+     * @return Result DTO for pipe
+     * @throws EntityNotFoundException in a case no Pipe founded
+     */
+    @Transactional
     public PipeResultDto getById(UUID pipeId) throws EntityNotFoundException {
         var pipeOptional = pipeRepository.findById(pipeId);
 
@@ -31,6 +38,10 @@ public class PipeQuery {
         return PipeResultDtoMapper.fromDomain(pipeOptional.get());
     }
 
+    /**
+     * Get pipes list
+     */
+    @Transactional
     public List<PipeResultDto> getList(PipeMaterial material, PipeStatus status) {
         return this.pipeRepository.findAll(material.name(), status.name())
                 .stream()

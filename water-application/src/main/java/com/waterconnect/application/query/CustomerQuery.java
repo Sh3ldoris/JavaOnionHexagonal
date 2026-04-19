@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.waterconnect.application.dto.CustomerResultDto;
 import com.waterconnect.application.dto.Page;
@@ -27,6 +28,7 @@ public class CustomerQuery {
      * @return Result DTO for customer
      * @throws EntityNotFoundException in a case no Customer founded
      */
+    @Transactional
     public CustomerResultDto getById(UUID customerId) throws EntityNotFoundException {
         var customerOptional = customerRepository.findById(customerId);
 
@@ -40,6 +42,7 @@ public class CustomerQuery {
     /**
      * Get customers list as page
      */
+    @Transactional
     public Page<CustomerResultDto> getList(int page, int size) {
         List<CustomerResultDto> customers = customerRepository.findAll(page, size)
                 .stream()
