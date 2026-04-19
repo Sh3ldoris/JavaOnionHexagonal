@@ -9,10 +9,16 @@ public class GeoSegmentDtoMapper {
     // No instances of mapper class
     private GeoSegmentDtoMapper() {}
 
-    public static GeoSegment mapToGeoPoint(GeoSegmentDto geoSegmentDto) {
-        GeoPoint startPoint = GeoPointDtoMapper.mapToGeoPoint(geoSegmentDto.start());
-        GeoPoint endPoint = GeoPointDtoMapper.mapToGeoPoint(geoSegmentDto.end());
+    public static GeoSegment toDomain(GeoSegmentDto geoSegmentDto) {
+        GeoPoint startPoint = GeoPointDtoMapper.toDomain(geoSegmentDto.start());
+        GeoPoint endPoint = GeoPointDtoMapper.toDomain(geoSegmentDto.end());
 
         return new GeoSegment(startPoint, endPoint);
+    }
+
+    public static GeoSegmentDto fromDomain(GeoSegment geoSegment) {
+        var startDto = GeoPointDtoMapper.fromDomain(geoSegment.start());
+        var endDto = GeoPointDtoMapper.fromDomain(geoSegment.end());
+        return new GeoSegmentDto(startDto, endDto);
     }
 }

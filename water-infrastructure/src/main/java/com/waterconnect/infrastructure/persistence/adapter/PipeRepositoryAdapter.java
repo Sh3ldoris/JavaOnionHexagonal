@@ -1,11 +1,14 @@
 package com.waterconnect.infrastructure.persistence.adapter;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
 import com.waterconnect.domain.model.aggregate.Pipe;
+import com.waterconnect.domain.model.enums.PipeMaterial;
+import com.waterconnect.domain.model.enums.PipeStatus;
 import com.waterconnect.domain.port.outbound.PipeRepository;
 import com.waterconnect.infrastructure.persistence.entity.PipeJpaEntity;
 import com.waterconnect.infrastructure.persistence.repository.PipeJpaRepository;
@@ -28,5 +31,14 @@ public class PipeRepositoryAdapter implements PipeRepository {
     @Override
     public Optional<Pipe> findById(UUID id) {
         return this.jpaRepository.findById(id).map(PipeJpaEntity::toDomain);
+    }
+
+    @Override
+    public List<Pipe> findAll(String material, String status) {
+        return this.jpaRepository
+                .findByMaterialAndStatus(PipeMaterial.fromString(material), PipeStatus.fromString(status))
+                .stream()
+                .map(PipeJpaEntity::toDomain)
+                .toList();
     }
 }

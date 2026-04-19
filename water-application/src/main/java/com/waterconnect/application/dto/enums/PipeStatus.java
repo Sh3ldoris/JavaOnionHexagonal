@@ -1,4 +1,4 @@
-package com.waterconnect.domain.model.enums;
+package com.waterconnect.application.dto.enums;
 
 public enum PipeStatus {
     PLANNED, INSTALLED, ACTIVE, DECOMMISSIONED;
