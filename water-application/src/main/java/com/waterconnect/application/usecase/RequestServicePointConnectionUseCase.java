@@ -15,6 +15,9 @@ import com.waterconnect.domain.port.outbound.CustomerRepository;
 import com.waterconnect.domain.port.outbound.DomainEventPublisher;
 import com.waterconnect.domain.port.outbound.ServicePointRepository;
 
+/**
+ * Use case: Customer requests a new water service connection.
+ */
 @Service
 public class RequestServicePointConnectionUseCase {
 
@@ -50,6 +53,15 @@ public class RequestServicePointConnectionUseCase {
 
         if (connector.get().getConnectorType() == ConnectorType.VALVE) {
             throw new BusinessRuleViolationException("Cannot create Service Point Connection for Connector of type: VALVE");
+        }
+
+        var customerServicePointList = this.servicePointRepository.findByCustomerId(customerId);
+        // Check if the allowed service points count is below the actual count + 1
+        if (customer.get().getAllowedServicePoints() < customerServicePointList.size() + 1) {
+            throw new BusinessRuleViolationException(
+                    String.format("Max Service Points reached! Actual service point count: %d for the customer: %s",
+                            customerServicePointList.size(), customerId.toString())
+            );
         }
 
         // Request a new Service Point
