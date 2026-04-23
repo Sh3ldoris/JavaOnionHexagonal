@@ -95,8 +95,6 @@ public class ServicePoint {
         }
 
         this.meter.recordReading(readingM3);
-
-
     }
 
     public void suspend() {

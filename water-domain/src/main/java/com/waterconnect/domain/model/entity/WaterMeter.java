@@ -19,6 +19,9 @@ public class WaterMeter {
     protected WaterMeter() {}
 
     public void recordReading(double readingM3) throws BusinessRuleViolationException {
+        if (readingM3 < 0) {
+            throw new BusinessRuleViolationException("readingM3 must be greater than 0. Was: " + readingM3);
+        }
         // Validate if the current reading is greater than was reading before
         if (readingM3 < this.lastReadingM3) {
             throw new BusinessRuleViolationException(
