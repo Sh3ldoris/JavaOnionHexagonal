@@ -3,12 +3,10 @@ package com.waterconnect.domain.model.entity;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.waterconnect.domain.exception.BusinessRuleViolationException;
+
 /**
  * WaterMeter — Entity within ServicePoint aggregate.
- *
- * TODO: Implement in Level 2
- * - Method: recordReading(double readingM3) — must be >= lastReadingM3
- * - Update lastReadingM3 and lastReadingAt
  */
 public class WaterMeter {
 
@@ -20,5 +18,56 @@ public class WaterMeter {
 
     protected WaterMeter() {}
 
-    // TODO: Implement
+    public void recordReading(double readingM3) throws BusinessRuleViolationException {
+        // Validate if the current reading is greater than was reading before
+        if (readingM3 < this.lastReadingM3) {
+            throw new BusinessRuleViolationException(
+                    "Reading %.3f cannot be less than previous reading %.3f"
+                            .formatted(readingM3, this.lastReadingM3)
+            );
+        }
+        // Set the values
+        this.lastReadingM3 = readingM3;
+        this.lastReadingAt = Instant.now();
+    }
+
+    public UUID getMeterId() {
+        return meterId;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public Instant getInstalledAt() {
+        return installedAt;
+    }
+
+    public double getLastReadingM3() {
+        return lastReadingM3;
+    }
+
+    public Instant getLastReadingAt() {
+        return lastReadingAt;
+    }
+
+    protected void setMeterId(UUID meterId) {
+        this.meterId = meterId;
+    }
+
+    protected void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    protected void setInstalledAt(Instant installedAt) {
+        this.installedAt = installedAt;
+    }
+
+    protected void setLastReadingM3(double lastReadingM3) {
+        this.lastReadingM3 = lastReadingM3;
+    }
+
+    protected void setLastReadingAt(Instant lastReadingAt) {
+        this.lastReadingAt = lastReadingAt;
+    }
 }

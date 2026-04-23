@@ -13,15 +13,7 @@ import com.waterconnect.domain.model.entity.WaterMeter;
 import com.waterconnect.domain.model.enums.ServicePointStatus;
 
 /**
- * ServicePoint Aggregate Root (Level 2).
- * TODO: Implement in Level 2
- * - Factory: ServicePoint.request(customerId, connectorId)
- * - Status lifecycle: REQUESTED → APPROVED → INSTALLED → ACTIVE → SUSPENDED/DISCONNECTED
- * - Method: approve() — only if REQUESTED
- * - Method: activate(WaterMeter meter) — only if APPROVED, sets meter + activatedAt
- * - Method: recordMeterReading(double readingM3) — must be >= previous, only if ACTIVE
- * - Method: suspend() / disconnect()
- * - Business rule: VALVE connectors cannot be used (validate in use case, not here)
+ * ServicePoint Aggregate Root
  */
 public class ServicePoint {
 
@@ -72,6 +64,57 @@ public class ServicePoint {
         }
 
         this.status = ServicePointStatus.APPROVED;
+    }
+
+    /**
+     * Activate the service point and set the provided water neter
+     * @param meter - service point water meter
+     * @throws BusinessRuleViolationException if the current state is not APPROVED
+     */
+    public void activate(WaterMeter meter) throws BusinessRuleViolationException {
+        if (this.status != ServicePointStatus.APPROVED) {
+            throw new BusinessRuleViolationException("Only APPROVED service point can be activated, current: " + this.status);
+        }
+
+        this.status = ServicePointStatus.ACTIVE;
+        this.meter = meter;
+        this.activatedAt =  Instant.now();
+    }
+
+    /**
+     * Record the current value of the service point water meter
+     */
+    public void recordMeterReading(double readingM3) throws BusinessRuleViolationException {
+        // Validate status
+        if (this.status != ServicePointStatus.ACTIVE) {
+            throw new BusinessRuleViolationException("Only ACTIVE service point can record meter, current: " + this.status);
+        }
+        // Validate if water meter is present
+        if (this.meter == null) {
+            throw new BusinessRuleViolationException("No meter found for this service point, ID: " + this.servicePointId);
+        }
+
+        this.meter.recordReading(readingM3);
+
+
+    }
+
+    public void suspend() {
+        if (this.status != ServicePointStatus.ACTIVE) {
+            throw new IllegalStateException(
+                    "Only ACTIVE service points can be suspended, current: " + this.status
+            );
+        }
+        this.status = ServicePointStatus.SUSPENDED;
+    }
+
+    public void disconnect() {
+        if (this.status != ServicePointStatus.ACTIVE && this.status != ServicePointStatus.SUSPENDED) {
+            throw new IllegalStateException(
+                    "Only ACTIVE or SUSPENDED service points can be disconnected, current: " + this.status
+            );
+        }
+        this.status = ServicePointStatus.DISCONNECTED;
     }
 
     public List<ServicePointConnectionRequestedEvent> getConnectionRequestedEvents() {

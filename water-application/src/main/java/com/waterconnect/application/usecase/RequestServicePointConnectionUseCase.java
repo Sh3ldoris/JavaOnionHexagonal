@@ -1,5 +1,8 @@
 package com.waterconnect.application.usecase;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class RequestServicePointConnectionUseCase {
     private final ConnectorRepository connectorRepository;
     private final DomainEventPublisher eventPublisher;
 
+    private final Set<ConnectorType> unsupportedConnectorTypes = new HashSet<>(List.of(ConnectorType.VALVE));
+
     public RequestServicePointConnectionUseCase(
             ServicePointRepository servicePointRepository,
             CustomerRepository customerRepository,
@@ -51,8 +56,10 @@ public class RequestServicePointConnectionUseCase {
             );
         }
 
-        if (connector.get().getConnectorType() == ConnectorType.VALVE) {
-            throw new BusinessRuleViolationException("Cannot create Service Point Connection for Connector of type: VALVE");
+        var connectorType = connector.get().getConnectorType();
+        var isUnsupportedConnector = unsupportedConnectorTypes.contains(connectorType);
+        if (isUnsupportedConnector) {
+            throw new BusinessRuleViolationException("Cannot create Service Point Connection for Connector of type" + connectorType);
         }
 
         var customerServicePointList = this.servicePointRepository.findByCustomerId(customerId);
