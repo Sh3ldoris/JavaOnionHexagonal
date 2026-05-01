@@ -1,16 +1,18 @@
 package com.waterconnect.infrastructure.persistence.entity;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.waterconnect.domain.model.entity.WaterMeter;
 import com.waterconnect.infrastructure.persistence.entity.factory.WaterMeterFactory;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table("water_meter")
+@Table(name = "water_meter")
 public class WaterMeterJpaEntity {
 
     @Id
@@ -20,10 +22,17 @@ public class WaterMeterJpaEntity {
     private double lastReadingM3;
     private Instant lastReadingAt;
 
+    @OneToOne(mappedBy = "meter")
+    private ServicePointJpaEntity servicePoint;
+
     protected WaterMeterJpaEntity() {
     }
 
     public static WaterMeterJpaEntity fromDomain(WaterMeter meter) {
+        if (Objects.isNull(meter)) {
+            return null;
+        }
+
         var entity = new WaterMeterJpaEntity();
 
         entity.meterId = meter.getMeterId();
@@ -84,5 +93,13 @@ public class WaterMeterJpaEntity {
 
     public void setLastReadingAt(Instant lastReadingAt) {
         this.lastReadingAt = lastReadingAt;
+    }
+
+    public ServicePointJpaEntity getServicePoint() {
+        return servicePoint;
+    }
+
+    public void setServicePoint(ServicePointJpaEntity servicePoint) {
+        this.servicePoint = servicePoint;
     }
 }

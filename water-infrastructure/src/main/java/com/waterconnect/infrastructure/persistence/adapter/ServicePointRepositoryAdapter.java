@@ -12,12 +12,6 @@ import com.waterconnect.domain.port.outbound.ServicePointRepository;
 @Repository
 public class ServicePointRepositoryAdapter implements ServicePointRepository {
 
-    private final ServicePointRepository jpaRepository;
-
-    public ServicePointRepositoryAdapter(ServicePointRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
-    }
-
     @Override
     public ServicePoint save(ServicePoint servicePoint) {
         return null;
