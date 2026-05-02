@@ -40,15 +40,17 @@ public class ServicePointJpaEntity {
     protected ServicePointJpaEntity() {}
 
     public static ServicePointJpaEntity fromDomain(ServicePoint servicePoint) {
-        if (Objects.isNull(servicePoint)) {
-            return null;
-        }
+        Objects.requireNonNull(servicePoint);
 
         var entity = new ServicePointJpaEntity();
         entity.servicePointId = servicePoint.getServicePointId();
         entity.customerId = servicePoint.getCustomerId();
         entity.connectorId = servicePoint.getConnectorId();
-        entity.meter = WaterMeterJpaEntity.fromDomain(servicePoint.getMeter());
+        if (Objects.nonNull(servicePoint.getMeter())) {
+            entity.meter = WaterMeterJpaEntity.fromDomain(
+                    servicePoint.getMeter()
+            );
+        }
         entity.status = servicePoint.getStatus();
         entity.requestedAt = servicePoint.getRequestedAt();
         entity.activatedAt = servicePoint.getActivatedAt();

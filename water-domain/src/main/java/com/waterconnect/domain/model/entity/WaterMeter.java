@@ -18,6 +18,16 @@ public class WaterMeter {
 
     protected WaterMeter() {}
 
+    public static WaterMeter install(String serialNumber, double lastReadingM3) {
+        var meter = new WaterMeter();
+        meter.meterId = UUID.randomUUID();
+        meter.serialNumber =  serialNumber;
+        meter.lastReadingM3 = lastReadingM3;
+        meter.installedAt = Instant.now();
+
+        return meter;
+    }
+
     public void recordReading(double readingM3) throws BusinessRuleViolationException {
         if (readingM3 < 0) {
             throw new BusinessRuleViolationException("readingM3 must be greater than 0. Was: " + readingM3);

@@ -29,9 +29,7 @@ public class WaterMeterJpaEntity {
     }
 
     public static WaterMeterJpaEntity fromDomain(WaterMeter meter) {
-        if (Objects.isNull(meter)) {
-            return null;
-        }
+        Objects.requireNonNull(meter);
 
         var entity = new WaterMeterJpaEntity();
 

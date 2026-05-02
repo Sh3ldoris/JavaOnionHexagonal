@@ -67,7 +67,7 @@ public class ServicePoint {
     }
 
     /**
-     * Activate the service point and set the provided water neter
+     * Activate the service point and set the provided water meter
      * @param meter - service point water meter
      * @throws BusinessRuleViolationException if the current state is not APPROVED
      */

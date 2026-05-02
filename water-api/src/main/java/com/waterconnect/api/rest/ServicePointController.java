@@ -18,6 +18,7 @@ import com.waterconnect.api.dto.RecordMeterReadingRequestDto;
 import com.waterconnect.api.dto.RequestServiceConnectionRequestDto;
 import com.waterconnect.application.dto.ServicePointResultDto;
 import com.waterconnect.application.query.ServicePointQuery;
+import com.waterconnect.application.usecase.ActivateServicePointConnectionUseCase;
 import com.waterconnect.application.usecase.ApproveServicePointConnectionUseCase;
 import com.waterconnect.application.usecase.RecordMeterReadingUseCase;
 import com.waterconnect.application.usecase.RequestServicePointConnectionUseCase;
@@ -42,17 +43,20 @@ public class ServicePointController {
     private final RequestServicePointConnectionUseCase requestServicePointConnectionUseCase;
     private final RecordMeterReadingUseCase recordMeterReadingUseCase;
     private final ApproveServicePointConnectionUseCase approveServicePointConnectionUseCase;
+    private final ActivateServicePointConnectionUseCase activateServicePointConnectionUseCase;
     private final ServicePointQuery getServicePointQuery;
 
     public ServicePointController(
             RequestServicePointConnectionUseCase requestServicePointConnectionUseCase,
             RecordMeterReadingUseCase recordMeterReadingUseCase,
             ApproveServicePointConnectionUseCase approveServicePointConnectionUseCase,
+            ActivateServicePointConnectionUseCase activateServicePointConnectionUseCase,
             ServicePointQuery getServicePointQuery
     ) {
         this.requestServicePointConnectionUseCase = requestServicePointConnectionUseCase;
         this.recordMeterReadingUseCase = recordMeterReadingUseCase;
         this.approveServicePointConnectionUseCase = approveServicePointConnectionUseCase;
+        this.activateServicePointConnectionUseCase = activateServicePointConnectionUseCase;
         this.getServicePointQuery = getServicePointQuery;
     }
 
@@ -105,8 +109,7 @@ public class ServicePointController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Service point connection approved.",
-                    content = @Content(schema = @Schema(implementation = ServicePointResultDto.class))),
+                    description = "Service point connection approved."),
     })
     @PutMapping("/{servicePointId}/approve")
     public void approve(
@@ -118,18 +121,14 @@ public class ServicePointController {
     @Operation(summary = "Activate a service point connection")
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "501",
-                    description = "Not yet implemented.",
-                    content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+                    responseCode = "200",
+                    description = "Service point connection activated.")
     })
     @PutMapping("/{servicePointId}/activate")
-    public ResponseEntity<ProblemDetail> activate(
+    public void activate(
             @Parameter(description = "Service point id", required = true) @PathVariable UUID servicePointId
     ) {
-        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_IMPLEMENTED);
-        problem.setTitle("Not Implemented");
-        problem.setDetail("Activation of service points is not yet supported.");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(problem);
+        this.activateServicePointConnectionUseCase.execute(servicePointId);
     }
 
     @Operation(summary = "Record a meter reading for a service point")

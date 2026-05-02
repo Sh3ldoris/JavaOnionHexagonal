@@ -8,23 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.exception.EntityNotFoundException;
-import com.waterconnect.domain.model.aggregate.WorkOrder;
-import com.waterconnect.domain.model.enums.WorkOrderType;
+import com.waterconnect.domain.model.entity.WaterMeter;
 import com.waterconnect.domain.port.outbound.ServicePointRepository;
-import com.waterconnect.domain.port.outbound.WorkOrderRepository;
 
 @Service
-public class ApproveServicePointConnectionUseCase {
+public class ActivateServicePointConnectionUseCase {
 
     private final ServicePointRepository servicePointRepository;
-    private final WorkOrderRepository workOrderRepository;
 
-    public ApproveServicePointConnectionUseCase(
-            ServicePointRepository servicePointRepository,
-            WorkOrderRepository workOrderRepository
+    public ActivateServicePointConnectionUseCase(
+            ServicePointRepository servicePointRepository
     ) {
         this.servicePointRepository = servicePointRepository;
-        this.workOrderRepository = workOrderRepository;
     }
 
     @Transactional
@@ -37,14 +32,9 @@ public class ApproveServicePointConnectionUseCase {
         }
 
         // Approve the service point
-        servicePoint.approve();
-        // Create a new work order of type: NEW_CONNECTION
-        var newConnectionWo = WorkOrder.create(WorkOrderType.NEW_CONNECTION, servicePoint.getServicePointId());
-
-        // TODO: Add create wo domain events
+        // TODO: Create a new water meter based on inputs
+        servicePoint.activate(WaterMeter.install("random_sn", 0));
 
         this.servicePointRepository.save(servicePoint);
-        // Save the new WO
-        this.workOrderRepository.save(newConnectionWo);
     }
 }
