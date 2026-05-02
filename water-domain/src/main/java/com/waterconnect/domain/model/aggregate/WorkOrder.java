@@ -6,24 +6,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
+import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.model.enums.WorkOrderStatus;
 import com.waterconnect.domain.model.enums.WorkOrderType;
 import com.waterconnect.domain.model.valueobject.WorkNote;
 
 /**
- * WorkOrder Aggregate Root (Level 2-3).
- *
- * TODO: Implement in Level 2-3
- * - Factory: WorkOrder.create(type, servicePointId)
- * - State machine: CREATED → SCHEDULED → IN_PROGRESS → COMPLETED
- * - CREATED → CANCELLED (only if not yet IN_PROGRESS)
- * - Method: schedule(LocalDate date, String team)
- * - Method: start() — only if SCHEDULED
- * - Method: complete() — only if IN_PROGRESS, sets completedAt
- * - Method: cancel() — only if CREATED or SCHEDULED
- * - Method: addNote(WorkNote note)
+ * WorkOrder Aggregate Root.
  */
 public class WorkOrder {
 
@@ -53,12 +45,55 @@ public class WorkOrder {
         workOrder.type = type;
         workOrder.servicePointId = servicePointId;
         // Set default attributes
-        var workOrderId = UUID.randomUUID();
-        workOrder.workOrderId = workOrderId;
+        workOrder.workOrderId = UUID.randomUUID();
         workOrder.status = WorkOrderStatus.CREATED;
         workOrder.createdAt = Instant.now();
 
         return workOrder;
+    }
+
+    public void schedule(LocalDate date, String team) {
+        Objects.requireNonNull(date, "date must not be null");
+        Objects.requireNonNull(team, "team must not be null");
+
+        if (team.isBlank()) {
+            throw new BusinessRuleViolationException("Team must not be blank");
+        }
+
+        this.scheduledDate = date;
+        this.assignedTeam = team;
+        this.status = WorkOrderStatus.SCHEDULED;
+    }
+
+    public void start() {
+        if (this.status != WorkOrderStatus.SCHEDULED) {
+            throw new BusinessRuleViolationException("WorkOrder must be scheduled. Current status is " + this.status);
+        }
+
+        this.status = WorkOrderStatus.IN_PROGRESS;
+    }
+
+    public void complete() {
+        if (this.status != WorkOrderStatus.IN_PROGRESS) {
+            throw new BusinessRuleViolationException("WorkOrder must be in progress. Current status is " + this.status);
+        }
+
+        this.status = WorkOrderStatus.COMPLETED;
+        this.completedAt = Instant.now();
+    }
+
+    public void cancel() {
+        if (!Set.of(WorkOrderStatus.CREATED, WorkOrderStatus.SCHEDULED).contains(this.status)) {
+            throw new BusinessRuleViolationException("WorkOrder must be in the CREATED or SCHEDULED status. Current status is " + this.status);
+        }
+
+        this.status = WorkOrderStatus.CANCELLED;
+    }
+
+    public void addNote(WorkNote note) {
+        Objects.requireNonNull(note, "WorkNote must not be null");
+
+        this.notes.add(note);
     }
 
     public UUID getWorkOrderId() {
