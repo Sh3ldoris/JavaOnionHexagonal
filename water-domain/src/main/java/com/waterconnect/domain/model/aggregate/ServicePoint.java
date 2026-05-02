@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.waterconnect.domain.event.DomainEvent;
+import com.waterconnect.domain.event.ServiceConnectionActivatedEvent;
 import com.waterconnect.domain.event.ServicePointConnectionRequestedEvent;
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.model.entity.WaterMeter;
@@ -25,7 +27,7 @@ public class ServicePoint {
     private Instant requestedAt;
     private Instant activatedAt;
 
-    private final List<ServicePointConnectionRequestedEvent> connectionRequestedEvents = new ArrayList<>();
+    private final List<DomainEvent> events = new ArrayList<>();
 
     protected ServicePoint() {}
 
@@ -49,7 +51,7 @@ public class ServicePoint {
         servicePoint.setRequestedAt(Instant.now());
 
         // Create a requested domain event
-        servicePoint.connectionRequestedEvents.add(new ServicePointConnectionRequestedEvent(servicePointId));
+        servicePoint.events.add(new ServicePointConnectionRequestedEvent(servicePointId));
 
         return servicePoint;
     }
@@ -79,6 +81,8 @@ public class ServicePoint {
         this.status = ServicePointStatus.ACTIVE;
         this.meter = meter;
         this.activatedAt =  Instant.now();
+
+        this.events.add(new ServiceConnectionActivatedEvent(this.servicePointId));
     }
 
     /**
@@ -115,8 +119,12 @@ public class ServicePoint {
         this.status = ServicePointStatus.DISCONNECTED;
     }
 
-    public List<ServicePointConnectionRequestedEvent> getConnectionRequestedEvents() {
-        return Collections.unmodifiableList(this.connectionRequestedEvents);
+    public void clearEvents() {
+        this.events.clear();
+    }
+
+    public List<DomainEvent> getEvents() {
+        return Collections.unmodifiableList(this.events);
     }
 
     public UUID getServicePointId() {
