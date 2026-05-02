@@ -63,6 +63,10 @@ public class WorkOrder {
         this.scheduledDate = date;
         this.assignedTeam = team;
         this.status = WorkOrderStatus.SCHEDULED;
+
+        // Log the schedule
+        var noteComment = String.format("Work order scheduled to %s and assigned to %s", this.scheduledDate, this.assignedTeam);
+        this.addNote(new WorkNote(noteComment, "system", Instant.now()));
     }
 
     public void start() {
@@ -71,6 +75,9 @@ public class WorkOrder {
         }
 
         this.status = WorkOrderStatus.IN_PROGRESS;
+
+        // Log the state change
+        this.addNote(new WorkNote("Work order started", "system", Instant.now()));
     }
 
     public void complete() {
@@ -80,6 +87,9 @@ public class WorkOrder {
 
         this.status = WorkOrderStatus.COMPLETED;
         this.completedAt = Instant.now();
+
+        // Log the state change
+        this.addNote(new WorkNote("Work order completed", "system", Instant.now()));
     }
 
     public void cancel() {
@@ -88,6 +98,9 @@ public class WorkOrder {
         }
 
         this.status = WorkOrderStatus.CANCELLED;
+
+        // Log the state change
+        this.addNote(new WorkNote("Work order canceled", "system", Instant.now()));
     }
 
     public void addNote(WorkNote note) {
