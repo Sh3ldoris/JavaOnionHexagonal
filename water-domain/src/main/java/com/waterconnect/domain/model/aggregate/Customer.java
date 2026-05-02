@@ -33,6 +33,12 @@ public class Customer {
         this.contactInfo = contactInfoToUpdate;
     }
 
+    public int getAllowedServicePoints() {
+        return this.customerType == CustomerType.RESIDENTIAL
+                ? 1
+                : 5;
+    }
+
     public UUID getCustomerId() {
         return customerId;
     }

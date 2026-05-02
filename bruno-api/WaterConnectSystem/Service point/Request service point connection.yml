@@ -1,0 +1,22 @@
+info:
+  name: Request service point connection
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8080/api/v1/service-points
+  body:
+    type: json
+    data: |-
+      {
+        "customerId": "6a960bce-99b1-4083-b75f-b7315642292b",
+        "connectorId": "31dd0fda-01e3-4308-8a09-3fb9398eba7e"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
