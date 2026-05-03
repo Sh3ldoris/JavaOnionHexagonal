@@ -64,6 +64,9 @@ public class WorkOrder {
         if (team.isBlank()) {
             throw new BusinessRuleViolationException("Team must not be blank");
         }
+        if (date.isBefore(LocalDate.now())) {
+            throw new BusinessRuleViolationException("Work order must be scheduled in the future");
+        }
 
         this.scheduledDate = date;
         this.assignedTeam = team;
