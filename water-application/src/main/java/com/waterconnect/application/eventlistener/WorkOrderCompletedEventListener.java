@@ -9,7 +9,6 @@ import com.waterconnect.application.usecase.ActivateServicePointConnectionUseCas
 import com.waterconnect.domain.event.WorkOrderCompletedEvent;
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.exception.EntityNotFoundException;
-import com.waterconnect.domain.port.outbound.ServicePointRepository;
 import com.waterconnect.domain.port.outbound.WorkOrderRepository;
 
 @Component
@@ -20,8 +19,7 @@ public class WorkOrderCompletedEventListener {
 
     public WorkOrderCompletedEventListener(
             ActivateServicePointConnectionUseCase activateServicePointConnectionUseCase,
-            WorkOrderRepository workOrderRepository,
-            ServicePointRepository servicePointRepository
+            WorkOrderRepository workOrderRepository
     ) {
         this.activateServicePointConnectionUseCase = activateServicePointConnectionUseCase;
         this.workOrderRepository = workOrderRepository;
