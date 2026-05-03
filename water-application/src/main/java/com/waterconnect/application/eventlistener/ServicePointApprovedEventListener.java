@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.waterconnect.domain.event.ServicePointApprovedEvent;
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
@@ -20,7 +22,7 @@ public class ServicePointApprovedEventListener {
         this.workOrderRepository = workOrderRepository;
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleServicePointApprovedEvent(ServicePointApprovedEvent event) {
         if (Objects.isNull(event.servicePointId())) {
             throw new BusinessRuleViolationException("Service point id cannot be null");

@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.waterconnect.application.usecase.ActivateServicePointConnectionUseCase;
 import com.waterconnect.domain.event.WorkOrderCompletedEvent;
@@ -25,7 +27,7 @@ public class WorkOrderCompletedEventListener {
         this.workOrderRepository = workOrderRepository;
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onUserCreated(WorkOrderCompletedEvent event) {
         // Get wo
         var workOrder = this.workOrderRepository
