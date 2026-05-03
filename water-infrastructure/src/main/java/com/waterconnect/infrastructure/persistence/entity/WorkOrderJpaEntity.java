@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.waterconnect.domain.model.aggregate.WorkOrder;
 import com.waterconnect.domain.model.enums.WorkOrderStatus;
 import com.waterconnect.domain.model.enums.WorkOrderType;
+import com.waterconnect.infrastructure.persistence.entity.factory.WorkOrderFactory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,6 +41,20 @@ public class WorkOrderJpaEntity {
     private Instant completedAt;
 
     protected WorkOrderJpaEntity() {}
+
+    public WorkOrder toDomain() {
+        return WorkOrderFactory.create(
+                this.workOrderId,
+                this.type,
+                this.servicePointId,
+                this.assignedTeam,
+                this.scheduledDate,
+                this.status,
+                this.notes.stream().map(WorkNoteJpaEntity::toDomain).toList(),
+                this.createdAt,
+                this.completedAt
+        );
+    }
 
     public static WorkOrderJpaEntity fromDomain(WorkOrder domain) {
         var  entity = new WorkOrderJpaEntity();
