@@ -6,25 +6,24 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.waterconnect.domain.event.DomainEvent;
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.exception.EntityNotFoundException;
-import com.waterconnect.domain.model.aggregate.WorkOrder;
-import com.waterconnect.domain.model.enums.WorkOrderType;
+import com.waterconnect.domain.port.outbound.DomainEventPublisher;
 import com.waterconnect.domain.port.outbound.ServicePointRepository;
-import com.waterconnect.domain.port.outbound.WorkOrderRepository;
 
 @Service
 public class ApproveServicePointConnectionUseCase {
 
     private final ServicePointRepository servicePointRepository;
-    private final WorkOrderRepository workOrderRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
     public ApproveServicePointConnectionUseCase(
             ServicePointRepository servicePointRepository,
-            WorkOrderRepository workOrderRepository
+            DomainEventPublisher domainEventPublisher
     ) {
         this.servicePointRepository = servicePointRepository;
-        this.workOrderRepository = workOrderRepository;
+        this.domainEventPublisher = domainEventPublisher;
     }
 
     @Transactional
@@ -38,13 +37,12 @@ public class ApproveServicePointConnectionUseCase {
 
         // Approve the service point
         servicePoint.approve();
-        // Create a new work order of type: NEW_CONNECTION
-        var newConnectionWo = WorkOrder.create(WorkOrderType.NEW_CONNECTION, servicePoint.getServicePointId());
-
-        // TODO: Add create wo domain events
 
         this.servicePointRepository.save(servicePoint);
-        // Save the new WO
-        this.workOrderRepository.save(newConnectionWo);
+
+        for (DomainEvent event : servicePoint.getEvents()) {
+            this.domainEventPublisher.publish(event);
+        }
+        servicePoint.clearEvents();
     }
 }

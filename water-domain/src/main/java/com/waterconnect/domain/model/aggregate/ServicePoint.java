@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.waterconnect.domain.event.DomainEvent;
 import com.waterconnect.domain.event.ServiceConnectionActivatedEvent;
+import com.waterconnect.domain.event.ServicePointApprovedEvent;
 import com.waterconnect.domain.event.ServicePointConnectionRequestedEvent;
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.model.entity.WaterMeter;
@@ -66,6 +67,8 @@ public class ServicePoint {
         }
 
         this.status = ServicePointStatus.APPROVED;
+
+        this.events.add(new ServicePointApprovedEvent(servicePointId));
     }
 
     /**
