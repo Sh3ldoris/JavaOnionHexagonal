@@ -6,20 +6,25 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.waterconnect.domain.event.DomainEvent;
 import com.waterconnect.domain.exception.BusinessRuleViolationException;
 import com.waterconnect.domain.exception.EntityNotFoundException;
 import com.waterconnect.domain.model.entity.WaterMeter;
+import com.waterconnect.domain.port.outbound.DomainEventPublisher;
 import com.waterconnect.domain.port.outbound.ServicePointRepository;
 
 @Service
 public class ActivateServicePointConnectionUseCase {
 
     private final ServicePointRepository servicePointRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
     public ActivateServicePointConnectionUseCase(
-            ServicePointRepository servicePointRepository
+            ServicePointRepository servicePointRepository,
+            DomainEventPublisher domainEventPublisher
     ) {
         this.servicePointRepository = servicePointRepository;
+        this.domainEventPublisher = domainEventPublisher;
     }
 
     @Transactional
@@ -36,5 +41,10 @@ public class ActivateServicePointConnectionUseCase {
         servicePoint.activate(WaterMeter.install("random_sn", 0));
 
         this.servicePointRepository.save(servicePoint);
+
+        for (DomainEvent event : servicePoint.getEvents()) {
+            this.domainEventPublisher.publish(event);
+        }
+        servicePoint.clearEvents();
     }
 }

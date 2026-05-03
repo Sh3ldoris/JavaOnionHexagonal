@@ -77,9 +77,10 @@ public class RequestServicePointConnectionUseCase {
         this.servicePointRepository.save(servicePoint);
 
         // Publish Service Point requested events
-        for (DomainEvent event : servicePoint.getConnectionRequestedEvents()) {
+        for (DomainEvent event : servicePoint.getEvents()) {
             this.eventPublisher.publish(event);
         }
+        servicePoint.clearEvents();
 
         return servicePoint.getServicePointId();
     }
