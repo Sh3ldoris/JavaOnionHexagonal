@@ -15,6 +15,11 @@ spring:
   config:
     activate:
       on-profile: dev
+  docker:
+    compose:
+      enabled: true
+      file: ./docker-compose.yml
+      lifecycle-management: start-only  # start on boot, keep running between restarts
   datasource:
     url: jdbc:postgresql://localhost:5432/water-connect-system
     driver-class-name: org.postgresql.Driver
@@ -33,6 +38,9 @@ spring:
   config:
     activate:
       on-profile: prod
+  docker:
+    compose:
+      enabled: false  # DB is an external service in prod, not managed by Docker Compose
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
     driver-class-name: org.postgresql.Driver
