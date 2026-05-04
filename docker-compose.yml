@@ -8,12 +8,12 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     ports:
-      - "5432"
+      - "5432:5432"
     volumes:
       - water_connect_system_db:/var/lib/postgresql/data
       - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-youruser} -d ${POSTGRES_DB:-yourapp}" ]
+      test: [ "CMD-SHELL", "pg_isready -U admin -d water-connect-system" ]
       interval: 10s
       timeout: 5s
       retries: 5
