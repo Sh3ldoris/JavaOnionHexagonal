@@ -1,1 +1,1 @@
-CREATE SCHEMA IF NOT EXISTS WATER_CONNECT_LIQUIBASE;
+create schema if not exists water_connect_liquibase;
