@@ -65,6 +65,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Docker compose runner -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
