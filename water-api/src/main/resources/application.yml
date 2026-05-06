@@ -6,7 +6,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update # TODO: Change to validate after liquibase implementation
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
