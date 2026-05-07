@@ -6,8 +6,17 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update # TODO: Change to validate after liquibase implementation
+      ddl-auto: validate
     show-sql: false
+    properties:
+      hibernate:
+        default_schema: water_connect
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+    enabled: true
+    default-schema: water_connect_liquibase
+    show-summary: verbose
+    show-summary-output: log
 
 ---
 # ── DEV profile ──
